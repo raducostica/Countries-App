@@ -38,6 +38,7 @@ const BordersContainer = styled.div`
 `;
 
 const CountryFlagContainer = styled.div`
+  max-width: 310px;
   :not(:last-of-type) {
     margin-right: 16px;
   }

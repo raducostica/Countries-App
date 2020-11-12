@@ -193,7 +193,6 @@ const Homepage: FC<HomepageProps> = ({
   const itemsRef = useRef<HTMLDivElement[]>([]);
   const inputRef = useRef(null);
 
-  // to show skeleton (i thought it was cool)
   const handleRouteChangeStart = () => {
     setTimeout(() => {
       setLoading(false);
@@ -280,24 +279,24 @@ const Homepage: FC<HomepageProps> = ({
     return suggestions;
   };
 
-  const updateItemAnimation = (index): boolean => {
+  const updateItemAnimation = (index) => {
     if (itemTops[index] && itemTops[index].top <= scrollPos) {
       let items = [...itemTops];
       let item = { ...items[index] };
       item.animate = true;
       items[index] = item;
       setItemTops(items);
-      return true;
     }
-    return false;
   };
 
   return (
     <>
       <Header>
         <Background>
-          {countries.map((country) => {
-            return <Image src={country.flag} height={110} width={160} />;
+          {countries.map((country, index) => {
+            return (
+              <Image key={index} src={country.flag} height={110} width={160} />
+            );
           })}
         </Background>
         <InputWrapper>
@@ -336,7 +335,7 @@ const Homepage: FC<HomepageProps> = ({
               >
                 {suggestions.map((suggestion, index) => {
                   return (
-                    <InputSuggestion key={index}>
+                    <InputSuggestion key={suggestion.alpha3Code}>
                       <Link href={`/country/${suggestion.alpha3Code}`}>
                         <Anchor>
                           {suggestion[dropDownItems[activeDropdown]]
