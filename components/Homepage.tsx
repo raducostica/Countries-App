@@ -32,7 +32,6 @@ const InputWrapper = styled.div`
   width: 90%;
   margin: 40px auto;
   display: flex;
-
   @media only screen and (min-width: 600px) {
     width: 640px;
   }
@@ -97,7 +96,6 @@ const DropdownContainer = styled.div`
   font-size: 14px;
   background: #0080ff;
   padding: 8px;
-
   :hover ${DropdownMenu} {
     display: block;
   }
@@ -121,11 +119,9 @@ const CardContainer = styled.div<{ animate?: any }>`
   margin-bottom: 24px;
   transition: opacity 2s ease-in-out;
   opacity: 0;
-
   @media only screen and (min-width: 800px) {
     height: 220px;
   }
-
   ${({ animate }) =>
     animate &&
     css`
@@ -135,7 +131,6 @@ const CardContainer = styled.div<{ animate?: any }>`
 
 const SkeletonContainer = styled.div`
   margin-bottom: 24px;
-
   @media only screen and (min-width: 800px) {
     height: 220px;
   }
@@ -150,7 +145,6 @@ const Header = styled.header`
   background: #333333;
   margin-bottom: 24px;
   overflow: hidden;
-
   @media only screen and (min-width: 800px) {
     height: 600px;
   }
@@ -191,7 +185,6 @@ const Homepage: FC<HomepageProps> = ({
   const [itemTops, setItemTops] = useState<ItemsTop[]>([]);
   const [scrollPos, setScrollPos] = useState<number>(0);
   const itemsRef = useRef<HTMLDivElement[]>([]);
-  const inputRef = useRef(null);
 
   const handleRouteChangeStart = () => {
     setTimeout(() => {
@@ -254,6 +247,18 @@ const Homepage: FC<HomepageProps> = ({
     };
   }, [scrollToTop]);
 
+  const getSuggestions = (type: string, text: string) => {
+    const suggestions = allCountries.filter((country, index) => {
+      if (
+        country[type].substring(0, text.length).toLowerCase() ===
+        text.toLowerCase()
+      )
+        return country;
+    });
+
+    return suggestions;
+  };
+
   useEffect(() => {
     const types = ["name", "capital"];
     setSuggestions(getSuggestions(types[activeDropdown], search));
@@ -267,19 +272,7 @@ const Homepage: FC<HomepageProps> = ({
     setSearch(e.target.value);
   };
 
-  const getSuggestions = (type: string, text: string) => {
-    const suggestions = allCountries.filter((country, index) => {
-      if (
-        country[type].substring(0, text.length).toLowerCase() ===
-        text.toLowerCase()
-      )
-        return country;
-    });
-
-    return suggestions;
-  };
-
-  const updateItemAnimation = (index) => {
+  const updateItemAnimation = (index: number) => {
     if (itemTops[index] && itemTops[index].top <= scrollPos) {
       let items = [...itemTops];
       let item = { ...items[index] };
@@ -307,21 +300,20 @@ const Homepage: FC<HomepageProps> = ({
             <DropdownMenu>
               {dropDownItems.map((item, index) => {
                 return (
-                  <>
+                  <Fragment key={index}>
                     {activeDropdown !== index && (
                       <DropdownMenuItem
-                        key={index}
                         onClick={() => setActiveDropdown(index)}
                       >
                         {item}
                       </DropdownMenuItem>
                     )}
-                  </>
+                  </Fragment>
                 );
               })}
             </DropdownMenu>
           </DropdownContainer>
-          <InputContainer ref={inputRef}>
+          <InputContainer>
             <Input
               type="text"
               onChange={handleSearchChange}
@@ -393,14 +385,13 @@ const Homepage: FC<HomepageProps> = ({
           .map((item, index) => {
             let page: number = parseInt(router.query.page as any) || 1;
             return (
-              <>
+              <Fragment key={index}>
                 {index === 0 ||
                 index + 1 === totalCountries / 25 ||
                 index + 1 === page - 1 ||
                 index + 1 === page ||
                 index + 1 === page + 1 ? (
                   <PaginationNumbers
-                    key={index}
                     onClick={() => {
                       router.push({
                         pathname: "/",
@@ -415,7 +406,7 @@ const Homepage: FC<HomepageProps> = ({
                 ) : (
                   <Fragment key={index}>{item}</Fragment>
                 )}
-              </>
+              </Fragment>
             );
           })}
       </Pagination>
